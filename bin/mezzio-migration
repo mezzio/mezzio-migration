@@ -3,7 +3,7 @@
 
 declare(strict_types=1);
 
-namespace Zend\Expressive\Migration;
+namespace Mezzio\Migration;
 
 // Setup/verify autoloading
 if (file_exists($a = __DIR__ . '/../../../autoload.php')) {

@@ -23,7 +23,7 @@ All notable changes to this project will be documented in this file, in reverse 
 ### Fixed
 
 - Fixes an issue that occurs when running in an application that does not
-  require zend-diactoros in the package root. The tool now explicitly requires it
+  require laminas-diactoros in the package root. The tool now explicitly requires it
   before doing any other migrations.
 
 - Adds a default directory in which to convert middleware to request handlers.
@@ -39,7 +39,7 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Changed
 
-- [#3](https://github.com/zendframework/zend-expressive-migration/pull/3)
+- [zendframework/zend-expressive-migration#3](https://github.com/zendframework/zend-expressive-migration/pull/3)
   updates the list of expected versions in the README to reflect released
   versions.
 
@@ -53,14 +53,14 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Fixed
 
-- [#4](https://github.com/zendframework/zend-expressive-migration/pull/4)
+- [zendframework/zend-expressive-migration#4](https://github.com/zendframework/zend-expressive-migration/pull/4)
   fixes some Windows compatibility problems.
 
-- [#5](https://github.com/zendframework/zend-expressive-migration/pull/5)
+- [zendframework/zend-expressive-migration#5](https://github.com/zendframework/zend-expressive-migration/pull/5)
   fixes some minor issues in detecting the latest version of the skeleton, as
   well as retrieving content from the skeleton.
 
-- [#5](https://github.com/zendframework/zend-expressive-migration/pull/5)
+- [zendframework/zend-expressive-migration#5](https://github.com/zendframework/zend-expressive-migration/pull/5)
   updates the tool to remove any "minimum-stability" settings in the
   `composer.json`.
 

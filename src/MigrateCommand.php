@@ -1,13 +1,14 @@
 <?php
+
 /**
- * @see       https://github.com/zendframework/zend-expressive-migration for the canonical source repository
- * @copyright Copyright (c) 2018 Zend Technologies USA Inc. (https://www.zend.com)
- * @license   https://github.com/zendframework/zend-expressive-migration/blob/master/LICENSE.md New BSD License
+ * @see       https://github.com/mezzio/mezzio-migration for the canonical source repository
+ * @copyright https://github.com/mezzio/mezzio-migration/blob/master/COPYRIGHT.md
+ * @license   https://github.com/mezzio/mezzio-migration/blob/master/LICENSE.md New BSD License
  */
 
 declare(strict_types=1);
 
-namespace Zend\Expressive\Migration;
+namespace Mezzio\Migration;
 
 use InvalidArgumentException;
 use RuntimeException;
@@ -26,23 +27,23 @@ class MigrateCommand extends Command
     private $output;
 
     private $packages = [
-        'zendframework/zend-diactoros',
-        'zendframework/zend-component-installer',
-        'zendframework/zend-problem-details',
-        'zendframework/zend-stratigility',
+        'laminas/laminas-diactoros',
+        'laminas/laminas-component-installer',
+        'mezzio/mezzio-problem-details',
+        'laminas/laminas-stratigility',
     ];
 
-    private $packagesPattern = '#^zendframework/zend-expressive(?!-migration)#';
+    private $packagesPattern = '#^mezzio/mezzio(?!-migration)#';
 
     private $skeletonVersion;
 
     protected function configure()
     {
-        $this->setDescription('Migrate an Expressive application from version 2 to version 3.');
+        $this->setDescription('Migrate an Mezzio application from version 2 to version 3.');
         $this->addArgument(
             'path',
             InputArgument::OPTIONAL,
-            'Path to the expressive application',
+            'Path to the mezzio application',
             realpath(getcwd())
         );
     }
@@ -73,15 +74,15 @@ class MigrateCommand extends Command
         chdir($path);
 
         $packages = $this->findPackagesToUpdate();
-        if (! isset($packages['zendframework/zend-expressive'])) {
-            $output->writeln('<error>Package zendframework/zend-expressive has not been detected.</error>');
+        if (! isset($packages['mezzio/mezzio'])) {
+            $output->writeln('<error>Package mezzio/mezzio has not been detected.</error>');
             return 1;
         }
 
         if (file_exists('composer.lock')) {
             $lock = json_decode(file_get_contents('composer.lock'), true);
             foreach ($lock['packages'] as $package) {
-                if (strtolower($package['name']) === 'zendframework/zend-expressive'
+                if (strtolower($package['name']) === 'mezzio/mezzio'
                     && preg_match('/\d+\.\d+(\.\d+)?/', $package['version'], $matches)
                 ) {
                     $version = $matches[0];
@@ -91,14 +92,14 @@ class MigrateCommand extends Command
         }
 
         if (! isset($version)) {
-            $output->writeln('<error>Cannot detect expressive version.</error>');
+            $output->writeln('<error>Cannot detect mezzio version.</error>');
             return 1;
         }
 
-        $output->writeln(sprintf('<info>Detected expressive in version %s</info>', $version));
+        $output->writeln(sprintf('<info>Detected mezzio in version %s</info>', $version));
 
         if (strpos($version, '2.') !== 0) {
-            $output->writeln(sprintf('<error>This tool can migrate only Expressive v2 applications</error>'));
+            $output->writeln(sprintf('<error>This tool can migrate only Mezzio v2 applications</error>'));
             return 1;
         }
 
@@ -106,8 +107,8 @@ class MigrateCommand extends Command
         if (isset($packages['aura/di'])) {
             $removePackages[] = 'aura/di';
 
-            $packages['zendframework/zend-auradi-config'] = [
-                'name' => 'zendframework/zend-auradi-config',
+            $packages['laminas/laminas-auradi-config'] = [
+                'name' => 'laminas/laminas-auradi-config',
                 'dev' => false,
             ];
         }
@@ -118,8 +119,8 @@ class MigrateCommand extends Command
             $removePackages[] = 'pimple/pimple';
             $removePackages[] = 'xtreamwayz/pimple-container-interop';
 
-            $packages['zendframework/zend-pimple-config'] = [
-                'name' => 'zendframework/zend-pimple-config',
+            $packages['laminas/laminas-pimple-config'] = [
+                'name' => 'laminas/laminas-pimple-config',
                 'dev' => false,
             ];
         }
@@ -140,13 +141,13 @@ class MigrateCommand extends Command
         $this->updateRoutes();
         $this->replaceIndex();
 
-        if (isset($packages['zendframework/zend-pimple-config'])) {
-            $container = $this->getFileContent('src/ExpressiveInstaller/Resources/config/container-pimple.php');
+        if (isset($packages['laminas/laminas-pimple-config'])) {
+            $container = $this->getFileContent('src/MezzioInstaller/Resources/config/container-pimple.php');
             file_put_contents('config/container.php', $container);
         }
 
-        if (isset($packages['zendframework/zend-auradi-config'])) {
-            $container = $this->getFileContent('src/ExpressiveInstaller/Resources/config/container-aura-di.php');
+        if (isset($packages['laminas/laminas-auradi-config'])) {
+            $container = $this->getFileContent('src/MezzioInstaller/Resources/config/container-aura-di.php');
             file_put_contents('config/container.php', $container);
         }
 
@@ -198,7 +199,7 @@ class MigrateCommand extends Command
     private function migrateInteropMiddlewares(string $src) : void
     {
         exec(sprintf(
-            'composer expressive -- migrate:interop-middleware --src %s',
+            'composer mezzio -- migrate:interop-middleware --src %s',
             $src
         ), $output);
 
@@ -208,7 +209,7 @@ class MigrateCommand extends Command
     private function migrateMiddlewaresToRequestHandlers(string $dir) : void
     {
         exec(sprintf(
-            'composer expressive -- migrate:middleware-to-request-handler --src %s',
+            'composer mezzio -- migrate:middleware-to-request-handler --src %s',
             $dir
         ), $output);
 
@@ -219,7 +220,7 @@ class MigrateCommand extends Command
     {
         exec('rm -Rf vendor');
         exec('composer install --no-interaction');
-        exec('composer require "zendframework/zend-diactoros:^1.7.1"');
+        exec('composer require "laminas/laminas-diactoros:^1.7.1"');
 
         $composer = $this->getComposerContent();
         $composer['config']['sort-packages'] = true;
@@ -238,24 +239,24 @@ class MigrateCommand extends Command
         if (file_exists('vendor/bin/phpcbf')) {
             $composer['scripts']['cs-fix'] = 'phpcbf';
         }
-        $composer['scripts']['expressive'] = 'expressive';
+        $composer['scripts']['mezzio'] = 'mezzio';
 
         $this->updateComposer($composer);
 
-        if (isset($packages['zendframework/zend-component-installer'])) {
-            $packages['zendframework/zend-component-installer']['dev'] = true;
+        if (isset($packages['laminas/laminas-component-installer'])) {
+            $packages['laminas/laminas-component-installer']['dev'] = true;
         } else {
-            $packages['zendframework/zend-component-installer'] = [
-                'name' => 'zendframework/zend-component-installer',
+            $packages['laminas/laminas-component-installer'] = [
+                'name' => 'laminas/laminas-component-installer',
                 'dev' => true,
             ];
         }
 
-        if (isset($packages['zendframework/zend-expressive-tooling'])) {
-            $packages['zendframework/zend-expressive-tooling']['dev'] = true;
+        if (isset($packages['mezzio/mezzio-tooling'])) {
+            $packages['mezzio/mezzio-tooling']['dev'] = true;
         } else {
-            $packages['zendframework/zend-expressive-tooling'] = [
-                'name' => 'zendframework/zend-expressive-tooling',
+            $packages['mezzio/mezzio-tooling'] = [
+                'name' => 'mezzio/mezzio-tooling',
                 'dev' => true,
             ];
         }
@@ -306,7 +307,7 @@ class MigrateCommand extends Command
 
         $commands = [
             // Remove this package itself if it was previously installed
-            sprintf('composer remove -q zendframework/zend-expressive-migration'),
+            sprintf('composer remove -q mezzio/mezzio-migration'),
             sprintf(
                 'composer remove --dev %s --no-interaction',
                 implode(' ', array_merge($require, $requireDev, $extraRequire, $extraRequireDev))
@@ -348,11 +349,11 @@ class MigrateCommand extends Command
 
         // @codingStandardsIgnoreStart
         $replacement = [
-            '->pipeRoutingMiddleware();'                           => '->pipe(\Zend\Expressive\Router\Middleware\RouteMiddleware::class);',
-            '->pipeDispatchMiddleware();'                          => '->pipe(\Zend\Expressive\Router\Middleware\DispatchMiddleware::class);',
-            'Zend\Expressive\Middleware\NotFoundHandler'           => 'Zend\Expressive\Handler\NotFoundHandler',
-            'Zend\Expressive\Middleware\ImplicitHeadMiddleware'    => 'Zend\Expressive\Router\Middleware\ImplicitHeadMiddleware',
-            'Zend\Expressive\Middleware\ImplicitOptionsMiddleware' => 'Zend\Expressive\Router\Middleware\ImplicitOptionsMiddleware',
+            '->pipeRoutingMiddleware();'                           => '->pipe(\Mezzio\Router\Middleware\RouteMiddleware::class);',
+            '->pipeDispatchMiddleware();'                          => '->pipe(\Mezzio\Router\Middleware\DispatchMiddleware::class);',
+            'Mezzio\Middleware\NotFoundHandler'           => 'Mezzio\Handler\NotFoundHandler',
+            'Mezzio\Middleware\ImplicitHeadMiddleware'    => 'Mezzio\Router\Middleware\ImplicitHeadMiddleware',
+            'Mezzio\Middleware\ImplicitOptionsMiddleware' => 'Mezzio\Router\Middleware\ImplicitOptionsMiddleware',
         ];
         // @codingStandardsIgnoreEnd
 
@@ -376,7 +377,7 @@ class MigrateCommand extends Command
         $string = key($search);
         $pipeline = preg_replace(
             '/' . preg_quote($string, '/') . '/',
-            $string . PHP_EOL . '$app->pipe(\Zend\Expressive\Router\Middleware\MethodNotAllowedMiddleware::class);',
+            $string . PHP_EOL . '$app->pipe(\Mezzio\Router\Middleware\MethodNotAllowedMiddleware::class);',
             $pipeline
         );
 
@@ -411,11 +412,11 @@ class MigrateCommand extends Command
             $this->skeletonVersion = 'master';
 
             $package = json_decode(
-                file_get_contents('https://packagist.org/p/zendframework/zend-expressive-skeleton.json'),
+                file_get_contents('https://packagist.org/p/mezzio/mezzio-skeleton.json'),
                 true
             );
 
-            $versions = array_reverse($package['packages']['zendframework/zend-expressive-skeleton']);
+            $versions = array_reverse($package['packages']['mezzio/mezzio-skeleton']);
 
             foreach ($versions as $version => $details) {
                 if (strpos($version, $match) === 0) {
@@ -433,7 +434,7 @@ class MigrateCommand extends Command
     {
         $version = $this->detectLastSkeletonVersion('3.');
         $uri = sprintf(
-            'https://raw.githubusercontent.com/zendframework/zend-expressive-skeleton/%s/',
+            'https://raw.githubusercontent.com/mezzio/mezzio-skeleton/%s/',
             $version
         );
 
@@ -464,8 +465,8 @@ class MigrateCommand extends Command
                     . '    \%s $factory,' . PHP_EOL
                     . '    \%s $container' . PHP_EOL
                     . ') : void {',
-                \Zend\Expressive\Application::class,
-                \Zend\Expressive\MiddlewareFactory::class,
+                \Mezzio\Application::class,
+                \Mezzio\MiddlewareFactory::class,
                 \Psr\Container\ContainerInterface::class
             ) . PHP_EOL . '\\0',
             $contents,

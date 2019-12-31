@@ -1,16 +1,16 @@
-# zend-expressive-migration
+# mezzio-migration
 
-[![Build Status](https://secure.travis-ci.org/zendframework/zend-expressive-migration.svg?branch=master)](https://secure.travis-ci.org/zendframework/zend-expressive-migration)
-[![Coverage Status](https://coveralls.io/repos/github/zendframework/zend-expressive-migration/badge.svg?branch=master)](https://coveralls.io/github/zendframework/zend-expressive-migration?branch=master)
+[![Build Status](https://travis-ci.org/mezzio/mezzio-migration.svg?branch=master)](https://travis-ci.org/mezzio/mezzio-migration)
+[![Coverage Status](https://coveralls.io/repos/github/mezzio/mezzio-migration/badge.svg?branch=master)](https://coveralls.io/github/mezzio/mezzio-migration?branch=master)
 
-This library provides a tool for migrating from Expressive v2 to v3.
+This library provides a tool for migrating from Mezzio v2 to v3.
 
 ## Installation
 
 Run the following to install this library:
 
 ```console
-$ composer require --dev zendframework/zend-expressive-migration
+$ composer require --dev mezzio/mezzio-migration
 ```
 
 ## Usage
@@ -18,7 +18,7 @@ $ composer require --dev zendframework/zend-expressive-migration
 Once you have installed the tool, execute it with the following:
 
 ```bash
-$ ./vendor/bin/expressive-migration migrate
+$ ./vendor/bin/mezzio-migration migrate
 ```
 
 > ### Cloning versus composer installation
@@ -27,11 +27,11 @@ $ ./vendor/bin/expressive-migration migrate
 > that instead. Clone using:
 >
 > ```bash
-> $ git clone https://github.com/zendframework/zend-expressive-migration
+> $ git clone https://github.com/mezzio/mezzio-migration
 > ```
 >
-> And then, instead of using `./vendor/bin/expressive-migration migrate`, use
-> `/full/path/to/zend-expressive-migration/bin/expressive-migration`.
+> And then, instead of using `./vendor/bin/mezzio-migration migrate`, use
+> `/full/path/to/mezzio-migration/bin/mezzio-migration`.
 
 > **TODO:**
 >
@@ -42,49 +42,49 @@ $ ./vendor/bin/expressive-migration migrate
 ## Requirements
 
 All external packages used within your project must be compatible with
-Expressive v3 libraries. If you are unsure, check their dependencies.
+Mezzio v3 libraries. If you are unsure, check their dependencies.
 
 This script will uninstall all dependent packages and then will try to install
 them with the latest compatible version. In case any package is not compatible,
 the script will report an error indicating which package need to be updated.
 
-The following table indicates Expressive package versions compatible with
+The following table indicates Mezzio package versions compatible with
 version 3, and to which the migration tool will update.
 
 | Package name                                      | Version |
 | ------------------------------------------------- | ------- |
-| zend-auradi-config                                | 1.0.0   |
-| zend-component-installer                          | 2.1.0   |
-| zend-config-aggregator                            | 1.1.0   |
-| zend-diactoros                                    | 1.7.1   |
-| zend-expressive                                   | 3.0.0   |
-| zend-expressive-aurarouter                        | 3.0.0   |
-| zend-expressive-authentication                    | 0.4.0   |
-| zend-expressive-authentication-basic              | 0.3.0   |
-| zend-expressive-authentication-oauth2             | 0.4.0   |
-| zend-expressive-authentication-session            | 0.4.0   |
-| zend-expressive-authentication-zendauthentication | 0.4.0   |
-| zend-expressive-authorization                     | 0.4.0   |
-| zend-expressive-authorization-acl                 | 0.3.0   |
-| zend-expressive-authorization-rbac                | 0.3.0   |
-| zend-expressive-csrf                              | 1.0.0   |
-| zend-expressive-fastroute                         | 3.0.0   |
-| zend-expressive-flash                             | 1.0.0   |
-| zend-expressive-hal                               | 1.0.0   |
-| zend-expressive-helpers                           | 5.0.0   |
-| zend-expressive-platesrenderer                    | 2.0.0   |
-| zend-expressive-router                            | 3.0.0   |
-| zend-expressive-session                           | 1.0.0   |
-| zend-expressive-session-ext                       | 1.0.0   |
-| zend-expressive-template                          | 2.0.0   |
-| zend-expressive-tooling                           | 1.0.0   |
-| zend-expressive-twigrenderer                      | 2.0.0   |
-| zend-expressive-zendrouter                        | 3.0.0   |
-| zend-expressive-zendviewrenderer                  | 2.0.0   |
-| zend-httphandlerrunner                            | 1.0.1   |
-| zend-pimple-config                                | 1.0.0   |
-| zend-problem-details                              | 1.0.0   |
-| zend-stratigility                                 | 3.0.0   |
+| laminas-auradi-config                                | 1.0.0   |
+| laminas-component-installer                          | 2.1.0   |
+| laminas-config-aggregator                            | 1.1.0   |
+| laminas-diactoros                                    | 1.7.1   |
+| mezzio                                   | 3.0.0   |
+| mezzio-aurarouter                        | 3.0.0   |
+| mezzio-authentication                    | 0.4.0   |
+| mezzio-authentication-basic              | 0.3.0   |
+| mezzio-authentication-oauth2             | 0.4.0   |
+| mezzio-authentication-session            | 0.4.0   |
+| mezzio-authentication-laminasauthentication | 0.4.0   |
+| mezzio-authorization                     | 0.4.0   |
+| mezzio-authorization-acl                 | 0.3.0   |
+| mezzio-authorization-rbac                | 0.3.0   |
+| mezzio-csrf                              | 1.0.0   |
+| mezzio-fastroute                         | 3.0.0   |
+| mezzio-flash                             | 1.0.0   |
+| mezzio-hal                               | 1.0.0   |
+| mezzio-helpers                           | 5.0.0   |
+| mezzio-platesrenderer                    | 2.0.0   |
+| mezzio-router                            | 3.0.0   |
+| mezzio-session                           | 1.0.0   |
+| mezzio-session-ext                       | 1.0.0   |
+| mezzio-template                          | 2.0.0   |
+| mezzio-tooling                           | 1.0.0   |
+| mezzio-twigrenderer                      | 2.0.0   |
+| mezzio-laminasrouter                        | 3.0.0   |
+| mezzio-laminasviewrenderer                  | 2.0.0   |
+| laminas-httphandlerrunner                            | 1.0.1   |
+| laminas-pimple-config                                | 1.0.0   |
+| mezzio-problem-details                              | 1.0.0   |
+| laminas-stratigility                                 | 3.0.0   |
 
 
 ## What does the tool do?
@@ -92,7 +92,7 @@ version 3, and to which the migration tool will update.
 In order to operate, the tool requires that the application directory contains a
 `composer.json` file, and that this file is writable by the script.
 
-Next, it attempts to detect the currently used Expressive version. If the
+Next, it attempts to detect the currently used Mezzio version. If the
 version detected is not a 2.X version, the script will exit without performing
 any changes.
 
@@ -102,32 +102,32 @@ It then performs the following steps:
 
 2. Installs current dependencies using `composer install`.
 
-3. Analyzes `composer.lock` to identify all packages which depends on Expressive packages.
+3. Analyzes `composer.lock` to identify all packages which depends on Mezzio packages.
 
-4. Removes all installed Expressive packages and packages that depend on them.
+4. Removes all installed Mezzio packages and packages that depend on them.
 
 5. Updates all remaining packages using `composer update`.
 
-6. Requires all Expressive packages previously installed, adding the packages
-   `zendframework/zend-component-installer` and `zendframework/zend-expressive-tooling`
+6. Requires all Mezzio packages previously installed, adding the packages
+   `laminas/laminas-component-installer` and `mezzio/mezzio-tooling`
    as development packages if they were not previously installed.
 
-7. Requires all packages installed previously that were dependent on Expressive.
+7. Requires all packages installed previously that were dependent on Mezzio.
    **This step may fail** in situations where external packages are not yet
-   compatible with Expressive v3 or its required libraries.
+   compatible with Mezzio v3 or its required libraries.
 
 8. Updates `config/pipeline.php`:
    1. adds strict type declarations to the top of the file;
    2. adds a function wrapper (as is done in the version 3 skeleton);
    3. updates the following middleware:
-      - `pipeRoutingMiddleware` becomes a `pipe()` statement referencing `Zend\Expressive\Router\Middleware\RouteMiddleware`.
-      - `pipeDispatchMiddleware` becomes a `pipe()` statement referencing `Zend\Expressive\Router\Middleware\DispatchMiddleware`,
-      - References to `Zend\Expressive\Middleware\NotFoundHandler` become `Zend\Expressive\Handler\NotFoundHandler`,
-      - References to `Zend\Expressive\Middleware\ImplicitHeadMiddleware` become `Zend\Expressive\Router\Middleware\ImplicitHeadMiddleware`,
-      - References to `Zend\Expressive\Middleware\ImplicitOptionsMiddleware` become `Zend\Expressive\Router\Middleware\ImplicitOptionsMiddleware`,
-   4. pipes `Zend\Expressive\Router\Middleware\MethodNotAllowedMiddleware` after
+      - `pipeRoutingMiddleware` becomes a `pipe()` statement referencing `Mezzio\Router\Middleware\RouteMiddleware`.
+      - `pipeDispatchMiddleware` becomes a `pipe()` statement referencing `Mezzio\Router\Middleware\DispatchMiddleware`,
+      - References to `Mezzio\Middleware\NotFoundHandler` become `Mezzio\Handler\NotFoundHandler`,
+      - References to `Mezzio\Middleware\ImplicitHeadMiddleware` become `Mezzio\Router\Middleware\ImplicitHeadMiddleware`,
+      - References to `Mezzio\Middleware\ImplicitOptionsMiddleware` become `Mezzio\Router\Middleware\ImplicitOptionsMiddleware`,
+   4. pipes `Mezzio\Router\Middleware\MethodNotAllowedMiddleware` after
       `Implicit*Middleware` (or if these are not piped, after
-      `Zend\Expressive\Router\Middleware\RouteMiddleware`).
+      `Mezzio\Router\Middleware\RouteMiddleware`).
 
 9. Updates `config/routes.php`:
    1. adds strict type declaration on top of the file;
@@ -138,14 +138,14 @@ It then performs the following steps:
 11. Updates container configuration if `pimple` or `Aura.Di` were used
     (`config/container.php`) from the latest skeleton version. Additionally, it
     does the following:
-    - For `pimple`: the package `xtreamwayz/pimple-container-interop` is replaced by `zendframework/zend-pimple-config`.
-    - For `Aura.Di`: the package `aura/di` is replaced by `zendframework/zend-auradi-config`.
+    - For `pimple`: the package `xtreamwayz/pimple-container-interop` is replaced by `laminas/laminas-pimple-config`.
+    - For `Aura.Di`: the package `aura/di` is replaced by `laminas/laminas-auradi-config`.
 
 12. Migrates http-interop middleware to PSR-15 middleware using
-    `./vendor/bin/expressive migrate:interop-middleware`.
+    `./vendor/bin/mezzio migrate:interop-middleware`.
 
 13. Migrates PSR-15 middleware to PSR-15 request handlers using
-    `./vendor/bin/expressive migrate:middleware-to-request-handler`.
+    `./vendor/bin/mezzio migrate:middleware-to-request-handler`.
 
 14. Runs `./vendor/bin/phpcbf` if it is available.
 

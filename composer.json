@@ -1,37 +1,20 @@
 {
-    "name": "zendframework/zend-expressive-migration",
-    "description": "Migrate Expressive applications from v2 to v3",
+    "name": "mezzio/mezzio-migration",
+    "description": "Migrate Mezzio applications from v2 to v3",
     "license": "BSD-3-Clause",
     "keywords": [
-        "expressive",
-        "zf",
-        "zendframework",
+        "laminas",
+        "mezzio",
         "migration"
     ],
+    "homepage": "https://mezzio.dev",
     "support": {
-        "issues": "https://github.com/webimpress/zend-expressive-migration/issues",
-        "source": "https://github.com/webimpress/zend-expressive-migration",
-        "rss": "https://github.com/webimpress/zend-expressive-migration/releases.atom",
-        "slack": "https://zendframework-slack.herokuapp.com",
-        "forum": "https://discourse.zendframework.com/c/questions/expressive"
-    },
-    "require": {
-        "php": "^7.1",
-        "symfony/console": "^2.8 || ^3.0 || ^4.0"
-    },
-    "require-dev": {
-        "phpunit/phpunit": "^7.0.2",
-        "zendframework/zend-coding-standard": "~1.0.0"
-    },
-    "autoload": {
-        "psr-4": {
-            "Zend\\Expressive\\Migration\\": "src/"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "ZendTest\\Expressive\\Migration\\": "test/"
-        }
+        "docs": "https://docs.mezzio.dev/mezzio-migration/",
+        "issues": "https://github.com/mezzio/mezzio-migration/issues",
+        "source": "https://github.com/mezzio/mezzio-migration",
+        "rss": "https://github.com/mezzio/mezzio-migration/releases.atom",
+        "chat": "https://laminas.dev/chat",
+        "forum": "https://discourse.laminas.dev"
     },
     "config": {
         "sort-packages": true
@@ -41,8 +24,27 @@
             "dev-master": "1.0-dev"
         }
     },
+    "require": {
+        "php": "^7.1",
+        "laminas/laminas-zendframework-bridge": "^1.0",
+        "symfony/console": "^2.8 || ^3.0 || ^4.0"
+    },
+    "require-dev": {
+        "laminas/laminas-coding-standard": "~1.0.0",
+        "phpunit/phpunit": "^7.0.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "Mezzio\\Migration\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "MezzioTest\\Migration\\": "test/"
+        }
+    },
     "bin": [
-        "bin/expressive-migration"
+        "bin/mezzio-migration"
     ],
     "scripts": {
         "check": [
@@ -53,5 +55,8 @@
         "cs-fix": "phpcbf",
         "test": "phpunit --colors=always",
         "test-coverage": "phpunit --colors=always --coverage-clover clover.xml"
+    },
+    "replace": {
+        "zendframework/zend-expressive-migration": "self.version"
     }
 }

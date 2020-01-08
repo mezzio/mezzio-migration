@@ -1,6 +1,6 @@
 # mezzio-migration
 
-[![Build Status](https://travis-ci.org/mezzio/mezzio-migration.svg?branch=master)](https://travis-ci.org/mezzio/mezzio-migration)
+[![Build Status](https://travis-ci.com/mezzio/mezzio-migration.svg?branch=master)](https://travis-ci.com/mezzio/mezzio-migration)
 [![Coverage Status](https://coveralls.io/repos/github/mezzio/mezzio-migration/badge.svg?branch=master)](https://coveralls.io/github/mezzio/mezzio-migration?branch=master)
 
 This library provides a tool for migrating from Mezzio v2 to v3.

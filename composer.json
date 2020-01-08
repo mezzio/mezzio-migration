@@ -9,7 +9,7 @@
     ],
     "homepage": "https://mezzio.dev",
     "support": {
-        "docs": "https://docs.mezzio.dev/mezzio-migration/",
+        "docs": "https://docs.mezzio.dev/mezzio/",
         "issues": "https://github.com/mezzio/mezzio-migration/issues",
         "source": "https://github.com/mezzio/mezzio-migration",
         "rss": "https://github.com/mezzio/mezzio-migration/releases.atom",

@@ -57,6 +57,6 @@
         "test-coverage": "phpunit --colors=always --coverage-clover clover.xml"
     },
     "replace": {
-        "zendframework/zend-expressive-migration": "self.version"
+        "zendframework/zend-expressive-migration": "^0.1.4"
     }
 }

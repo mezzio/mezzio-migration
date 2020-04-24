@@ -348,8 +348,8 @@ class MigrateCommand extends Command
 
         // @codingStandardsIgnoreStart
         $replacement = [
-            '->pipeRoutingMiddleware();'                           => '->pipe(\Mezzio\Router\Middleware\RouteMiddleware::class);',
-            '->pipeDispatchMiddleware();'                          => '->pipe(\Mezzio\Router\Middleware\DispatchMiddleware::class);',
+            '->pipeRoutingMiddleware();'                  => '->pipe(\Mezzio\Router\Middleware\RouteMiddleware::class);',
+            '->pipeDispatchMiddleware();'                 => '->pipe(\Mezzio\Router\Middleware\DispatchMiddleware::class);',
             'Mezzio\Middleware\NotFoundHandler'           => 'Mezzio\Handler\NotFoundHandler',
             'Mezzio\Middleware\ImplicitHeadMiddleware'    => 'Mezzio\Router\Middleware\ImplicitHeadMiddleware',
             'Mezzio\Middleware\ImplicitOptionsMiddleware' => 'Mezzio\Router\Middleware\ImplicitOptionsMiddleware',

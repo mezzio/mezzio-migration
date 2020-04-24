@@ -5,5 +5,4 @@
     <!-- Paths to check -->
     <file>bin/mezzio-migration</file>
     <file>src</file>
-    <file>test</file>
 </ruleset>

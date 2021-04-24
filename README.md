@@ -1,6 +1,6 @@
 # mezzio-migration
 
-[![Build Status](https://github.com/mezzio/mezzio-migration/workflows/continuous-integration.yml/badge.svg)](https://github.com/mezzio/mezzio-migration/actions/workflows/continuous-integration.yml)
+[![Build Status](https://github.com/mezzio/mezzio-migration/actions/workflows/continuous-integration.yml/badge.svg)](https://github.com/mezzio/mezzio-migration/actions/workflows/continuous-integration.yml)
 
 This library provides a tool for migrating from Mezzio v2 to v3.
 

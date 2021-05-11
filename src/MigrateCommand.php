@@ -5,12 +5,48 @@ declare(strict_types=1);
 namespace Mezzio\Migration;
 
 use InvalidArgumentException;
+use Mezzio\Application;
+use Mezzio\MiddlewareFactory;
+use Psr\Container\ContainerInterface;
 use RuntimeException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
+
+use function array_merge;
+use function arsort;
+use function chdir;
+use function exec;
+use function explode;
+use function file_exists;
+use function file_get_contents;
+use function file_put_contents;
+use function getcwd;
+use function implode;
+use function in_array;
+use function is_array;
+use function is_dir;
+use function is_writable;
+use function json_decode;
+use function json_encode;
+use function key;
+use function preg_match;
+use function preg_quote;
+use function preg_replace;
+use function realpath;
+use function sprintf;
+use function str_replace;
+use function strpos;
+use function strrpos;
+use function strtolower;
+use function strtr;
+use function trim;
+
+use const JSON_PRETTY_PRINT;
+use const JSON_UNESCAPED_SLASHES;
+use const PHP_EOL;
 
 class MigrateCommand extends Command
 {
@@ -20,6 +56,7 @@ class MigrateCommand extends Command
     /** @var OutputInterface */
     private $output;
 
+    /** @var string[] */
     private $packages = [
         'laminas/laminas-diactoros',
         'laminas/laminas-component-installer',
@@ -27,8 +64,10 @@ class MigrateCommand extends Command
         'laminas/laminas-stratigility',
     ];
 
+    /** @var string */
     private $packagesPattern = '#^mezzio/mezzio(?!-migration)#';
 
+    /** @var string */
     private $skeletonVersion;
 
     protected function configure()
@@ -59,9 +98,12 @@ class MigrateCommand extends Command
         }
     }
 
+    /**
+     * @return int
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->input = $input;
+        $this->input  = $input;
         $this->output = $output;
 
         $path = $input->getArgument('path');
@@ -76,7 +118,8 @@ class MigrateCommand extends Command
         if (file_exists('composer.lock')) {
             $lock = json_decode(file_get_contents('composer.lock'), true);
             foreach ($lock['packages'] as $package) {
-                if (strtolower($package['name']) === 'mezzio/mezzio'
+                if (
+                    strtolower($package['name']) === 'mezzio/mezzio'
                     && preg_match('/\d+\.\d+(\.\d+)?/', $package['version'], $matches)
                 ) {
                     $version = $matches[0];
@@ -103,11 +146,12 @@ class MigrateCommand extends Command
 
             $packages['laminas/laminas-auradi-config'] = [
                 'name' => 'laminas/laminas-auradi-config',
-                'dev' => false,
+                'dev'  => false,
             ];
         }
 
-        if (isset($packages['pimple/pimple'])
+        if (
+            isset($packages['pimple/pimple'])
             || isset($packages['xtreamwayz/pimple-container-interop'])
         ) {
             $removePackages[] = 'pimple/pimple';
@@ -115,7 +159,7 @@ class MigrateCommand extends Command
 
             $packages['laminas/laminas-pimple-config'] = [
                 'name' => 'laminas/laminas-pimple-config',
-                'dev' => false,
+                'dev'  => false,
             ];
         }
 
@@ -160,7 +204,7 @@ class MigrateCommand extends Command
         return 0;
     }
 
-    private function csAutoFix() : void
+    private function csAutoFix(): void
     {
         $this->output->writeln('<question>Running CS auto-fixer</question>');
         if (file_exists('vendor/bin/phpcbf')) {
@@ -169,9 +213,9 @@ class MigrateCommand extends Command
         }
     }
 
-    private function getDirectory(string $questionString, string $default = null) : string
+    private function getDirectory(string $questionString, ?string $default = null): string
     {
-        $helper = $this->getHelper('question');
+        $helper   = $this->getHelper('question');
         $question = new Question(
             ($default ? sprintf('%s [<info>%s</info>]', $questionString, $default) : $questionString) . ': ',
             $default
@@ -190,7 +234,7 @@ class MigrateCommand extends Command
         return $src;
     }
 
-    private function migrateInteropMiddlewares(string $src) : void
+    private function migrateInteropMiddlewares(string $src): void
     {
         exec(sprintf(
             'composer mezzio -- migrate:interop-middleware --src %s',
@@ -200,7 +244,7 @@ class MigrateCommand extends Command
         $this->output->writeln($output);
     }
 
-    private function migrateMiddlewaresToRequestHandlers(string $dir) : void
+    private function migrateMiddlewaresToRequestHandlers(string $dir): void
     {
         exec(sprintf(
             'composer mezzio -- migrate:middleware-to-request-handler --src %s',
@@ -210,14 +254,15 @@ class MigrateCommand extends Command
         $this->output->writeln($output);
     }
 
-    private function updatePackages(array $packages) : void
+    private function updatePackages(array $packages): void
     {
         exec('rm -Rf vendor');
         exec('composer install --no-interaction');
 
-        $composer = $this->getComposerContent();
+        $composer                            = $this->getComposerContent();
         $composer['config']['sort-packages'] = true;
-        if (isset($composer['config']['platform']['php'])
+        if (
+            isset($composer['config']['platform']['php'])
             && strpos($composer['config']['platform']['php'], '7.1') === false
             && strpos($composer['config']['platform']['php'], '7.2') === false
             && strpos($composer['config']['platform']['php'], '7.3') === false
@@ -241,7 +286,7 @@ class MigrateCommand extends Command
         } else {
             $packages['laminas/laminas-component-installer'] = [
                 'name' => 'laminas/laminas-component-installer',
-                'dev' => true,
+                'dev'  => true,
             ];
         }
 
@@ -250,7 +295,7 @@ class MigrateCommand extends Command
         } else {
             $packages['mezzio/mezzio-tooling'] = [
                 'name' => 'mezzio/mezzio-tooling',
-                'dev' => true,
+                'dev'  => true,
             ];
         }
 
@@ -270,13 +315,13 @@ class MigrateCommand extends Command
             }
 
             foreach ($output as $line) {
-                $exp = explode(' ', $line, 2);
+                $exp           = explode(' ', $line, 2);
                 $deps[$exp[0]] = $exp[0];
             }
         }
         unset($deps[$composer['name']]);
 
-        $extraRequire = [];
+        $extraRequire    = [];
         $extraRequireDev = [];
         foreach ($deps as $dep) {
             if (isset($composer['require'][$dep])) {
@@ -288,7 +333,7 @@ class MigrateCommand extends Command
             }
         }
 
-        $require = ['laminas/laminas-diactoros'];
+        $require    = ['laminas/laminas-diactoros'];
         $requireDev = [];
         foreach ($packages as $name => $package) {
             if ($package['dev']) {
@@ -329,7 +374,7 @@ class MigrateCommand extends Command
         }
     }
 
-    private function updatePipeline() : void
+    private function updatePipeline(): void
     {
         $this->output->write('<info>Updating pipeline...</info>');
 
@@ -367,7 +412,7 @@ class MigrateCommand extends Command
         }
         arsort($search);
 
-        $string = key($search);
+        $string   = key($search);
         $pipeline = preg_replace(
             '/' . preg_quote($string, '/') . '/',
             $string . PHP_EOL . '$app->pipe(\Mezzio\Router\Middleware\MethodNotAllowedMiddleware::class);',
@@ -379,7 +424,7 @@ class MigrateCommand extends Command
         $this->output->writeln(' <comment>DONE</comment>');
     }
 
-    private function updateRoutes() : void
+    private function updateRoutes(): void
     {
         $this->output->write('<info>Updating routes...</info>');
 
@@ -390,7 +435,7 @@ class MigrateCommand extends Command
         $this->output->writeln(' <comment>DONE</comment>');
     }
 
-    private function replaceIndex() : void
+    private function replaceIndex(): void
     {
         $this->output->write('<info>Replacing index.php...</info>');
         $index = $this->getFileContent('public/index.php');
@@ -399,7 +444,7 @@ class MigrateCommand extends Command
         $this->output->writeln(' <comment>DONE</comment>');
     }
 
-    private function detectLastSkeletonVersion(string $match) : string
+    private function detectLastSkeletonVersion(string $match): string
     {
         if (! $this->skeletonVersion) {
             $this->skeletonVersion = 'master';
@@ -422,10 +467,10 @@ class MigrateCommand extends Command
         return $this->skeletonVersion;
     }
 
-    private function getFileContent(string $path) : string
+    private function getFileContent(string $path): string
     {
         $version = $this->detectLastSkeletonVersion('/^3\.\d+\.\d+$/');
-        $uri = sprintf(
+        $uri     = sprintf(
             'https://raw.githubusercontent.com/mezzio/mezzio-skeleton/%s/',
             $version
         );
@@ -433,7 +478,7 @@ class MigrateCommand extends Command
         return file_get_contents($uri . $path);
     }
 
-    private function addFunctionWrapper(string $file) : bool
+    private function addFunctionWrapper(string $file): bool
     {
         if (! file_exists($file)) {
             return false;
@@ -457,9 +502,9 @@ class MigrateCommand extends Command
                     . '    \%s $factory,' . PHP_EOL
                     . '    \%s $container' . PHP_EOL
                     . ') : void {',
-                \Mezzio\Application::class,
-                \Mezzio\MiddlewareFactory::class,
-                \Psr\Container\ContainerInterface::class
+                Application::class,
+                MiddlewareFactory::class,
+                ContainerInterface::class
             ) . PHP_EOL . '\\0',
             $contents,
             1
@@ -471,12 +516,12 @@ class MigrateCommand extends Command
         return true;
     }
 
-    private function getComposerContent() : array
+    private function getComposerContent(): array
     {
         return json_decode(file_get_contents('composer.json'), true);
     }
 
-    private function updateComposer(array $data) : void
+    private function updateComposer(array $data): void
     {
         foreach ($data as $sectionName => $sectionData) {
             if (is_array($sectionData) && ! $sectionData) {
@@ -494,7 +539,7 @@ class MigrateCommand extends Command
      *     @var bool $dev
      * }
      */
-    private function findPackagesToUpdate() : array
+    private function findPackagesToUpdate(): array
     {
         $packages = [];
         $composer = $this->getComposerContent();
@@ -524,7 +569,7 @@ class MigrateCommand extends Command
         return $packages;
     }
 
-    private function isPackageToUpdate(string $name) : bool
+    private function isPackageToUpdate(string $name): bool
     {
         return in_array($name, $this->packages, true) || preg_match($this->packagesPattern, $name);
     }

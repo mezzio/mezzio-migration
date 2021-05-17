@@ -1,36 +1,30 @@
 {
     "name": "mezzio/mezzio-migration",
     "description": "Migrate Mezzio applications from v2 to v3",
-    "license": "BSD-3-Clause",
     "keywords": [
         "laminas",
         "mezzio",
         "migration"
     ],
     "homepage": "https://mezzio.dev",
-    "support": {
-        "docs": "https://docs.mezzio.dev/mezzio/",
-        "issues": "https://github.com/mezzio/mezzio-migration/issues",
-        "source": "https://github.com/mezzio/mezzio-migration",
-        "rss": "https://github.com/mezzio/mezzio-migration/releases.atom",
-        "chat": "https://laminas.dev/chat",
-        "forum": "https://discourse.laminas.dev"
-    },
-    "config": {
-        "sort-packages": true
-    },
-    "extra": {
-    },
+    "license": "BSD-3-Clause",
     "require": {
         "php": "^7.3 || ~8.0.0",
         "ext-json": "*",
         "laminas/laminas-zendframework-bridge": "^1.0",
         "symfony/console": "^2.8 || ^3.0 || ^4.0 || ^5.0"
     },
+    "replace": {
+        "zendframework/zend-expressive-migration": "^0.1.4"
+    },
     "require-dev": {
         "laminas/laminas-coding-standard": "~2.1.0",
         "phpunit/phpunit": "^9.3"
     },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {},
     "autoload": {
         "psr-4": {
             "Mezzio\\Migration\\": "src/"
@@ -54,7 +48,12 @@
         "test": "phpunit --colors=always",
         "test-coverage": "phpunit --colors=always --coverage-clover clover.xml"
     },
-    "replace": {
-        "zendframework/zend-expressive-migration": "^0.1.4"
+    "support": {
+        "issues": "https://github.com/mezzio/mezzio-migration/issues",
+        "forum": "https://discourse.laminas.dev",
+        "chat": "https://laminas.dev/chat",
+        "source": "https://github.com/mezzio/mezzio-migration",
+        "docs": "https://docs.mezzio.dev/mezzio/",
+        "rss": "https://github.com/mezzio/mezzio-migration/releases.atom"
     }
 }

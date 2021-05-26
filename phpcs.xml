@@ -12,8 +12,9 @@
     <arg value="p"/>
 
     <!-- Paths to check -->
-    <file>bin/mezzio-migration</file>
+    <file>bin</file>
     <file>src</file>
+    <file>test</file>
 
     <!-- Include all rules from the Laminas Coding Standard -->
     <rule ref="LaminasCodingStandard"/>

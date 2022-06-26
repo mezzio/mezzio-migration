@@ -12,9 +12,6 @@
         <directory name="src"/>
         <directory name="test"/>
         <ignoreFiles>
-            <directory name="vendor"/>
-        </ignoreFiles>
-        <ignoreFiles>
             <directory name="vendor" />
         </ignoreFiles>
     </projectFiles>

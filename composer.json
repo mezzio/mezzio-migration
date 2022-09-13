@@ -20,6 +20,9 @@
         "sort-packages": true,
         "platform": {
             "php": "7.3.99"
+        },
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
         }
     },
     "extra": {},
@@ -30,7 +33,7 @@
     },
     "require-dev": {
         "laminas/laminas-coding-standard": "~2.2.0",
-        "phpunit/phpunit": "^9.3",
+        "phpunit/phpunit": "^9.5.24",
         "psalm/plugin-phpunit": "^0.17.0",
         "vimeo/psalm": "^4"
     },

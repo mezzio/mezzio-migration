@@ -5,7 +5,7 @@
       <code>$dir</code>
     </MissingClosureParamType>
     <MissingClosureReturnType occurrences="1">
-      <code>function ($dir) {</code>
+      <code>static function ($dir) {</code>
     </MissingClosureReturnType>
     <MissingReturnType occurrences="2">
       <code>configure</code>

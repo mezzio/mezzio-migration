@@ -17,6 +17,7 @@ use Symfony\Component\Console\Question\Question;
 
 use function array_merge;
 use function arsort;
+use function assert;
 use function chdir;
 use function exec;
 use function explode;
@@ -50,22 +51,19 @@ use const PHP_EOL;
 
 class MigrateCommand extends Command
 {
-    /** @var InputInterface */
-    private $input;
+    private ?InputInterface $input = null;
 
-    /** @var OutputInterface */
-    private $output;
+    private ?OutputInterface $output = null;
 
     /** @var string[] */
-    private $packages = [
+    private array $packages = [
         'laminas/laminas-diactoros',
         'laminas/laminas-component-installer',
         'mezzio/mezzio-problem-details',
         'laminas/laminas-stratigility',
     ];
 
-    /** @var string */
-    private $packagesPattern = '#^mezzio/mezzio(?!-migration)#';
+    private string $packagesPattern = '#^mezzio/mezzio(?!-migration)#';
 
     /** @var string */
     private $skeletonVersion;
@@ -206,6 +204,8 @@ class MigrateCommand extends Command
 
     private function csAutoFix(): void
     {
+        assert($this->output instanceof OutputInterface);
+
         $this->output->writeln('<question>Running CS auto-fixer</question>');
         if (file_exists('vendor/bin/phpcbf')) {
             exec('composer cs-fix', $output);
@@ -220,13 +220,16 @@ class MigrateCommand extends Command
             ($default ? sprintf('%s [<info>%s</info>]', $questionString, $default) : $questionString) . ': ',
             $default
         );
-        $question->setValidator(function ($dir) {
+        $question->setValidator(static function ($dir) {
             if (! $dir || ! is_dir($dir)) {
                 throw new RuntimeException(sprintf('Directory %s does not exist. Please try again', $dir));
             }
 
             return $dir;
         });
+
+        assert($this->output instanceof OutputInterface);
+
         $src = $helper->ask($this->input, $this->output, $question);
 
         $this->output->writeln('<question>Provided directory is: ' . $src . '</question>');
@@ -241,6 +244,8 @@ class MigrateCommand extends Command
             $src
         ), $output);
 
+        assert($this->output instanceof OutputInterface);
+
         $this->output->writeln($output);
     }
 
@@ -250,6 +255,8 @@ class MigrateCommand extends Command
             'composer mezzio -- migrate:middleware-to-request-handler --src %s',
             $dir
         ), $output);
+
+        assert($this->output instanceof OutputInterface);
 
         $this->output->writeln($output);
     }
@@ -348,11 +355,11 @@ class MigrateCommand extends Command
             sprintf('composer remove -q mezzio/mezzio-migration'),
             sprintf(
                 'composer remove --dev %s --no-interaction',
-                implode(' ', array_merge($require, $requireDev, $extraRequire, $extraRequireDev))
+                implode(' ', [...$require, ...$requireDev, ...$extraRequire, ...$extraRequireDev])
             ),
             sprintf(
                 'composer remove %s --no-interaction',
-                implode(' ', array_merge($require, $requireDev, $extraRequire, $extraRequireDev))
+                implode(' ', [...$require, ...$requireDev, ...$extraRequire, ...$extraRequireDev])
             ),
             sprintf('composer update --no-interaction'),
             sprintf('composer require %s --no-interaction', implode(' ', $require)),
@@ -360,6 +367,8 @@ class MigrateCommand extends Command
             sprintf('composer require %s --no-interaction', implode(' ', $extraRequire)),
             sprintf('composer require --dev %s --no-interaction', implode(' ', $extraRequireDev)),
         ];
+
+        assert($this->output instanceof OutputInterface);
 
         foreach ($commands as $command) {
             $this->output->writeln('<question>' . $command . '</question>');
@@ -376,6 +385,8 @@ class MigrateCommand extends Command
 
     private function updatePipeline(): void
     {
+        assert($this->output instanceof OutputInterface);
+
         $this->output->write('<info>Updating pipeline...</info>');
 
         if (! $this->addFunctionWrapper('config/pipeline.php')) {
@@ -426,6 +437,8 @@ class MigrateCommand extends Command
 
     private function updateRoutes(): void
     {
+        assert($this->output instanceof OutputInterface);
+
         $this->output->write('<info>Updating routes...</info>');
 
         if (! $this->addFunctionWrapper('config/routes.php')) {
@@ -437,6 +450,8 @@ class MigrateCommand extends Command
 
     private function replaceIndex(): void
     {
+        assert($this->output instanceof OutputInterface);
+
         $this->output->write('<info>Replacing index.php...</info>');
         $index = $this->getFileContent('public/index.php');
 
@@ -460,6 +475,8 @@ class MigrateCommand extends Command
                     break;
                 }
             }
+
+            assert($this->output instanceof OutputInterface);
 
             $this->output->write(sprintf(' <info>from skeleton version: %s</info>', $version));
         }

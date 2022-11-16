@@ -540,7 +540,9 @@ class MigrateCommand extends Command
 
     private function getComposerContent(): array
     {
-        return json_decode(file_get_contents('composer.json'), true, 512, JSON_THROW_ON_ERROR);
+        $content = json_decode(file_get_contents('composer.json'), true, 512, JSON_THROW_ON_ERROR);
+        assert(is_array($content));
+        return $content;
     }
 
     private function updateComposer(array $data): void

@@ -38,14 +38,16 @@ use function preg_quote;
 use function preg_replace;
 use function realpath;
 use function sprintf;
+use function str_contains;
 use function str_replace;
-use function strpos;
+use function str_starts_with;
 use function strrpos;
 use function strtolower;
 use function strtr;
 use function trim;
 
 use const JSON_PRETTY_PRINT;
+use const JSON_THROW_ON_ERROR;
 use const JSON_UNESCAPED_SLASHES;
 use const PHP_EOL;
 
@@ -114,7 +116,7 @@ class MigrateCommand extends Command
         }
 
         if (file_exists('composer.lock')) {
-            $lock = json_decode(file_get_contents('composer.lock'), true);
+            $lock = json_decode(file_get_contents('composer.lock'), true, 512, JSON_THROW_ON_ERROR);
             foreach ($lock['packages'] as $package) {
                 if (
                     strtolower($package['name']) === 'mezzio/mezzio'
@@ -133,7 +135,7 @@ class MigrateCommand extends Command
 
         $output->writeln(sprintf('<info>Detected mezzio in version %s</info>', $version));
 
-        if (strpos($version, '2.') !== 0) {
+        if (! str_starts_with($version, '2.')) {
             $output->writeln(sprintf('<error>This tool can migrate only Mezzio v2 applications</error>'));
             return 1;
         }
@@ -270,9 +272,9 @@ class MigrateCommand extends Command
         $composer['config']['sort-packages'] = true;
         if (
             isset($composer['config']['platform']['php'])
-            && strpos($composer['config']['platform']['php'], '7.1') === false
-            && strpos($composer['config']['platform']['php'], '7.2') === false
-            && strpos($composer['config']['platform']['php'], '7.3') === false
+            && ! str_contains($composer['config']['platform']['php'], '7.1')
+            && ! str_contains($composer['config']['platform']['php'], '7.2')
+            && ! str_contains($composer['config']['platform']['php'], '7.3')
         ) {
             $composer['config']['platform']['php'] = '7.1.3';
         }
@@ -307,7 +309,7 @@ class MigrateCommand extends Command
         }
 
         $deps = [];
-        $lock = json_decode(file_get_contents('composer.lock'), true);
+        $lock = json_decode(file_get_contents('composer.lock'), true, 512, JSON_THROW_ON_ERROR);
 
         foreach (array_merge($lock['packages'], $lock['packages-dev'] ?? []) as $package) {
             $name = $package['name'];
@@ -466,9 +468,12 @@ class MigrateCommand extends Command
 
             $package = json_decode(
                 file_get_contents('https://packagist.org/packages/mezzio/mezzio-skeleton.json'),
-                true
+                true,
+                512,
+                JSON_THROW_ON_ERROR
             );
 
+            $version = null;
             foreach ($package['package']['versions'] as $version => $details) {
                 if (preg_match($match, $version)) {
                     $this->skeletonVersion = $version;
@@ -503,11 +508,11 @@ class MigrateCommand extends Command
 
         $contents = file_get_contents($file);
 
-        if (strpos($contents, 'return function') !== false) {
+        if (str_contains($contents, 'return function')) {
             return false;
         }
 
-        if (strpos($contents, 'strict_types') === false) {
+        if (! str_contains($contents, 'strict_types')) {
             $contents = str_replace('<?php', '<?php' . PHP_EOL . PHP_EOL . 'declare(strict_types=1);', $contents);
         }
 
@@ -535,7 +540,7 @@ class MigrateCommand extends Command
 
     private function getComposerContent(): array
     {
-        return json_decode(file_get_contents('composer.json'), true);
+        return json_decode(file_get_contents('composer.json'), true, 512, JSON_THROW_ON_ERROR);
     }
 
     private function updateComposer(array $data): void

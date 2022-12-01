@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="4.23.0@f1fe6ff483bf325c803df9f510d09a03fd796f88">
+<files psalm-version="5.0.0@4e177bf0c9f03c17d2fbfd83b7cc9c47605274d8">
   <file src="src/MigrateCommand.php">
     <MissingClosureParamType occurrences="1">
       <code>$dir</code>
@@ -36,7 +36,7 @@
       <code>Application::class</code>
       <code>MiddlewareFactory::class</code>
     </MixedArgument>
-    <MixedArrayAccess occurrences="11">
+    <MixedArrayAccess occurrences="12">
       <code>$composer['config']['platform']['php']</code>
       <code>$composer['config']['platform']['php']</code>
       <code>$composer['config']['platform']['php']</code>
@@ -47,6 +47,7 @@
       <code>$package['name']</code>
       <code>$package['name']</code>
       <code>$package['package']</code>
+      <code>$package['package']['versions']</code>
       <code>$package['version']</code>
     </MixedArrayAccess>
     <MixedArrayAssignment occurrences="7">
@@ -83,8 +84,7 @@
       <code>$this-&gt;skeletonVersion</code>
       <code>$version</code>
     </MixedAssignment>
-    <MixedInferredReturnType occurrences="3">
-      <code>array</code>
+    <MixedInferredReturnType occurrences="2">
       <code>string</code>
       <code>string</code>
     </MixedInferredReturnType>
@@ -97,19 +97,14 @@
     <MixedReturnStatement occurrences="3">
       <code>$src</code>
       <code>$this-&gt;skeletonVersion</code>
-      <code>json_decode(file_get_contents('composer.json'), true)</code>
+      <code>$this-&gt;skeletonVersion</code>
     </MixedReturnStatement>
     <PossiblyInvalidDocblockTag occurrences="3">
       <code>@var bool $dev</code>
       <code>@var string $constraint</code>
       <code>@var string $name</code>
     </PossiblyInvalidDocblockTag>
-    <PossiblyUndefinedVariable occurrences="1">
-      <code>$version</code>
-    </PossiblyUndefinedVariable>
-    <PropertyNotSetInConstructor occurrences="3">
-      <code>$input</code>
-      <code>$output</code>
+    <PropertyNotSetInConstructor occurrences="1">
       <code>$skeletonVersion</code>
     </PropertyNotSetInConstructor>
     <UndefinedClass occurrences="2">

@@ -29,6 +29,7 @@ use function implode;
 use function in_array;
 use function is_array;
 use function is_dir;
+use function is_string;
 use function is_writable;
 use function json_decode;
 use function json_encode;
@@ -65,6 +66,7 @@ class MigrateCommand extends Command
         'laminas/laminas-stratigility',
     ];
 
+    /** @var non-empty-string */
     private string $packagesPattern = '#^mezzio/mezzio(?!-migration)#';
 
     /** @var string */
@@ -136,7 +138,7 @@ class MigrateCommand extends Command
         $output->writeln(sprintf('<info>Detected mezzio in version %s</info>', $version));
 
         if (! str_starts_with($version, '2.')) {
-            $output->writeln(sprintf('<error>This tool can migrate only Mezzio v2 applications</error>'));
+            $output->writeln('<error>This tool can migrate only Mezzio v2 applications</error>');
             return 1;
         }
 
@@ -219,7 +221,9 @@ class MigrateCommand extends Command
     {
         $helper   = $this->getHelper('question');
         $question = new Question(
-            ($default ? sprintf('%s [<info>%s</info>]', $questionString, $default) : $questionString) . ': ',
+            ($default !== null ?
+                sprintf('%s [<info>%s</info>]', $questionString, $default)
+                : $questionString) . ': ',
             $default
         );
         $question->setValidator(static function ($dir) {
@@ -263,6 +267,9 @@ class MigrateCommand extends Command
         $this->output->writeln($output);
     }
 
+    /**
+     * @param array<string, array{name: string, constraint: string, dev: bool}> $packages
+     */
     private function updatePackages(array $packages): void
     {
         exec('rm -Rf vendor');
@@ -354,7 +361,7 @@ class MigrateCommand extends Command
 
         $commands = [
             // Remove this package itself if it was previously installed
-            sprintf('composer remove -q mezzio/mezzio-migration'),
+            'composer remove -q mezzio/mezzio-migration',
             sprintf(
                 'composer remove --dev %s --no-interaction',
                 implode(' ', [...$require, ...$requireDev, ...$extraRequire, ...$extraRequireDev])
@@ -363,7 +370,7 @@ class MigrateCommand extends Command
                 'composer remove %s --no-interaction',
                 implode(' ', [...$require, ...$requireDev, ...$extraRequire, ...$extraRequireDev])
             ),
-            sprintf('composer update --no-interaction'),
+            'composer update --no-interaction',
             sprintf('composer require %s --no-interaction', implode(' ', $require)),
             sprintf('composer require --dev %s --no-interaction', implode(' ', $requireDev)),
             sprintf('composer require %s --no-interaction', implode(' ', $extraRequire)),
@@ -461,6 +468,7 @@ class MigrateCommand extends Command
         $this->output->writeln(' <comment>DONE</comment>');
     }
 
+    /** @param non-empty-string $match */
     private function detectLastSkeletonVersion(string $match): string
     {
         if (! $this->skeletonVersion) {
@@ -557,11 +565,11 @@ class MigrateCommand extends Command
     }
 
     /**
-     * @return array {
-     *     @var string $name
-     *     @var string $constraint
-     *     @var bool $dev
-     * }
+     * @return array<string, array{
+     *     name: string,
+     *     constraint: string,
+     *     dev: bool,
+     * }>
      */
     private function findPackagesToUpdate(): array
     {
@@ -569,6 +577,7 @@ class MigrateCommand extends Command
         $composer = $this->getComposerContent();
 
         foreach ($composer['require'] as $package => $constraint) {
+            assert(is_string($constraint));
             $package = strtolower($package);
             if ($this->isPackageToUpdate($package)) {
                 $packages[$package] = [
@@ -580,6 +589,7 @@ class MigrateCommand extends Command
         }
 
         foreach ($composer['require-dev'] as $package => $constraint) {
+            assert(is_string($constraint));
             $package = strtolower($package);
             if ($this->isPackageToUpdate($package)) {
                 $packages[$package] = [

@@ -10,10 +10,6 @@
     <MissingClosureReturnType>
       <code><![CDATA[static function ($dir) {]]></code>
     </MissingClosureReturnType>
-    <MissingReturnType>
-      <code><![CDATA[configure]]></code>
-      <code><![CDATA[initialize]]></code>
-    </MissingReturnType>
     <MixedArgument>
       <code><![CDATA[$composer['config']['platform']['php']]]></code>
       <code><![CDATA[$composer['config']['platform']['php']]]></code>
@@ -65,7 +61,6 @@
     <MixedAssignment>
       <code><![CDATA[$constraint]]></code>
       <code><![CDATA[$details]]></code>
-      <code><![CDATA[$helper]]></code>
       <code><![CDATA[$line]]></code>
       <code><![CDATA[$lock]]></code>
       <code><![CDATA[$lock]]></code>
@@ -86,9 +81,6 @@
       <code><![CDATA[string]]></code>
       <code><![CDATA[string]]></code>
     </MixedInferredReturnType>
-    <MixedMethodCall>
-      <code><![CDATA[ask]]></code>
-    </MixedMethodCall>
     <MixedOperand>
       <code><![CDATA[$src]]></code>
     </MixedOperand>
@@ -104,6 +96,9 @@
       <code><![CDATA[Application]]></code>
       <code><![CDATA[MiddlewareFactory]]></code>
     </UndefinedClass>
+    <UndefinedInterfaceMethod>
+      <code><![CDATA[ask]]></code>
+    </UndefinedInterfaceMethod>
     <UnusedForeachValue>
       <code><![CDATA[$details]]></code>
     </UnusedForeachValue>
